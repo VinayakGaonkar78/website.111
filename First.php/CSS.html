@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>CSS Template</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" >
+<link rel="shortcut icon" href="MYPIC.jpg" type="image/jpg">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Style the header */
+header {
+  background-color: rgb(236, 240, 15);
+  padding: 30px;
+  text-align: center;
+  font-size: 35px;
+  color: rgb(247, 17, 247);
+}
+
+/* Create two columns/boxes that floats next to each other */
+nav {
+  float: left;
+  width: 40%;
+  height: 300px; /* only for demonstration, should be removed */
+  background: rgb(241, 230, 122);
+  font-size:14px;
+  color:rgb(235, 8, 8);
+}
+
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+article {
+  float: left;
+  padding: 20px;
+  width: 60%;
+  background-color: #f8f674;
+  height: 300px; /* only for demonstration, should be removed */
+  font-size:16px;
+  color:rgb(235, 8, 8);
+}
+
+/* Clear floats after the columns */
+section::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the footer */
+footer {
+  background-color: rgb(245, 247, 166);
+  padding: 10px;
+  text-align: right;
+  color: rgb(236, 8, 8);
+}
+
+/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+@media (max-width: 600px) {
+  nav, article {
+    width: 100%;
+    height: auto;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h2>Vinayak Gaonkar<img  src="MYPIC.jpg" width="50" height="50"></h2>
+</header>
+
+<section>
+  <nav>
+    <ul>
+      <li><a>About Me</a></li><br>
+      <li><a>Experience-Fresher</a></li>
+      <br>
+      <li><a>References
+<br> Github-LINK=<a href="mart.html">https://vinayakgaonkar78.github.io/</a>
+<br> Linkedin-LINK=<a href="mart.html">https://www.linkedin.com/in/vinayak-gaonkar-vpg8788/</a>
+     </a></li><br>
+     <li><a>SKILLS
+       <br><a>Learning C</a>
+       <br><a>Learning C++</a>
+       <br><a>Learning CSS</a>
+     </a></li>
+   
+    </ul>
+  </nav>
+  
+  <article>
+    <h1>About myself</h1>
+    <p>Who am i??
+      <br>
+        I am an aspiring engineering student and i am passionate about implementing and launching new and innovative projects.</p>  
+     <p>
+       <br>
+       <br>
+       <br>
+       Education
+       <br>
+       2016-2019
+       Vidya Vikas Academy Margao
+       High School And Inter College , CBSE
+       <br>
+       2019-Today
+       Goa COllege of Engineering 
+       Branch Information Technology 3RD Year
+     </p>   
+  </article>
+</section>
+
+<footer>
+  <p>Contact Information
+    <br>BLDG No-F-3,Nr Durga Petrol Pump, Fatorda , Goa
+    <br>+91 8788922437
+    <br>email-vinayakgaonkar78@gmail.com
+  </p>
+</footer>
+
+</body>
+</html>
