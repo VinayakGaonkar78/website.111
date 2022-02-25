@@ -1,0 +1,658 @@
+	//pDC->LineTo(150,150);
+
+
+	//traingle with color
+	//CBrush bBrush(RGB(0,0,0));
+	//CBrush *grBrush = pDC->SelectObject(&bBrush);
+	//CPoint Triq[3];
+	//int Ptsa[] = {3};
+	//Triq[0] = CPoint(420,140);
+	//Triq[1] = CPoint(300,250);
+	//Triq[2] = CPoint(550,250);
+	//pDC->PolyPolygon(Triq,Ptsa,1);
+	//pDC->SelectObject(grBrush);
+
+
+	//ractangle with color
+	//CBrush c;
+	//c.CreateSolidBrush(RGB(150,75,0));
+	//pDC->SelectObject(c);
+	
+	
+	 //flood fill
+	 //pDC->Rectangle(400,400,500,500);
+	 //CBrush mybr1;
+	 //mybr1.CreateSolidBrush(RGB(255.,175,0));
+	 //pDC->SelectObject(mybr1);
+	 //pDC->FloodFill(450,450,RGB(0,0,0));
+--------------------------------------------------------------------------------------
+
+	//DDA
+	void DDA(float x1, float y1, int x2, int y2, CDC* ptr)
+	{
+	int dx = x2 - x1;
+	int dy = y2 - y1;
+	
+	int steps = dx > dy ? dx : dy;
+	
+	float xinc = dx / (float) steps;
+	float yinc = dy / (float) steps;
+
+	for (int i = 0; i < steps; i++)
+	{
+		ptr->SetPixel(x1, y1, RGB(0, 0, 0));
+		x1 += xinc;
+		y1 += yinc;
+	}
+	}
+--------------------------------------------------------------------------------
+
+	//BRESHMEN
+	void bresenham(int x1,int y1,int x2,int y2,CDC *pDC)
+	{
+	int dx,dy,p,dy2,dx2,dydx,x,y;
+	float m=float(y2-y1)/(x2-x1);
+
+	dx= abs(x2-x1);
+	dy=abs(y2-y1);
+	
+	//case 1 : 0<=m<=1
+	if(m>=0 && m<=1)
+	{	p=(2*dy)-dx;
+		dy2=2*dy;
+		dydx=2*(dy-dx);
+		x=x1;y=y1;
+
+		pDC->SetPixel(x,y,RGB(0,0,0));
+		while(x<x2)
+		{
+			x++;
+			if(p<0)
+			{	p+=dy2;	}
+			else 
+			{	y++; p+=dydx;	}
+
+			pDC->SetPixel(x,y,RGB(0,0,0));
+		}
+	}
+	//case 2 : m>1
+	else if(m>1)
+	{
+		p=(2*dx)-dy;
+		dx2=2*dx;
+		dydx=2*(dx-dy);
+		x=x1;y=y1;
+
+		pDC->SetPixel(x,y,RGB(0,0,0));		
+		while(y<y2)
+		{
+			y++;
+			if(p<0) 
+			{	p+=dx2; 
+			}
+			else
+			{	x++; p+=dydx;
+			}
+
+			pDC->SetPixel(x,y,RGB(0,0,0));		
+		}
+	}
+	// case 3 : -1<=m<=0
+	else if(m<=0 && m>=-1)
+	{	
+		p=(2*dy)-dx;
+		dy2=2*dy;
+		dydx=2*(dy-dx);
+		x=x1;
+		y=y1;
+		
+		pDC->SetPixel(x,y,RGB(0,0,0));
+		while(x<x2)
+		{
+			x++;
+			if(p<0)
+			{	p+=dy2;	}
+			else 
+			{	y--; p+=dydx;	}
+
+			pDC->SetPixel(x,y,RGB(0,0,0));
+		}
+	}
+	//case 4 : m<-1
+	else 
+	{
+		p=(2*dx)-dy;
+		dx2=2*dx;
+		dydx=2*(dx-dy);
+		x=x1;y=y1;
+
+		pDC->SetPixel(x,y,RGB(0,0,0));		
+		while(y>y2)
+		{
+			y--;
+			if(p<0) 
+			{	p+=dx2; 
+			}
+			else
+			{	x++; p+=dydx;
+			}
+
+			pDC->SetPixel(x,y,RGB(0,0,0));		
+		}
+	}
+	}
+
+-----------------------------------------------------------------------------------------------
+	//MIDPOINT
+	void mid_circle(int x0,int y0,int rad,CDC* pDC)
+	{
+	int f, x, y, ddfx, ddfy ;
+	f = (1 - rad);
+		ddfx = 1;
+	ddfy = -2*rad;
+		x = 0;
+		y = rad;	
+	pDC->SetPixel(x0, y0+rad, RGB(0,0,0));
+	pDC->SetPixel(x0, y0-rad, RGB(0,0,0));
+	pDC->SetPixel(x0+rad, y0, RGB(0,0,0));
+	pDC->SetPixel(x0-rad, y0, RGB(0,0,0));	
+	while(x<y)
+	{	
+			if (f>0)
+			{	y--;ddfy +=2;f += ddfy;	}
+
+			else
+			{	x++;ddfx +=2;f +=ddfx;	}
+
+			pDC->SetPixel(x0+x, y0+y, RGB(0,0,0));
+			pDC->SetPixel(x0-x, y0+y, RGB(0,0,0));
+			pDC->SetPixel(x0+x, y0-y, RGB(0,0,0));
+			pDC->SetPixel(x0-x, y0-y, RGB(0,0,0));
+			pDC->SetPixel(x0+y, y0+x, RGB(0,0,0));
+			pDC->SetPixel(x0-y, y0+x, RGB(0,0,0));
+			pDC->SetPixel(x0+y, y0-x, RGB(0,0,0));
+			pDC->SetPixel(x0-y, y0-x, RGB(0,0,0));
+	}
+
+	}
+------------------------------------------------------------------
+
+	//MIDPOINT ELLIPSE
+	//mid point ellipse algorithm
+void mid_ellipse(int x0,int y0,int radx,int rady,CDC* pDC)
+{
+	int f1,f2,x=0,y=rady;
+	f1 = (rady*rady)-(radx*radx*rady)+(radx*radx/4);
+	
+	pDC->SetPixel(x0, y0+rady, RGB(0,0,0));
+	pDC->SetPixel(x0, y0-rady, RGB(0,0,0));
+	pDC->SetPixel(x0+radx, y0, RGB(0,0,0));
+	pDC->SetPixel(x0-radx, y0, RGB(0,0,0));
+	
+	while(2*rady*rady*x<2*radx*radx*y)
+	{
+	
+			if (f1>0)
+			{
+				y--;x++;f1+=(2*rady*rady*x)-(2*radx*radx*y)+(rady*rady);
+			}
+
+			else
+			{
+				x++;f1+=(2*rady*rady*x)+(rady*rady);
+			}
+
+			pDC->SetPixel(x0+x, y0+y, RGB(0,0,0));
+			pDC->SetPixel(x0-x, y0+y, RGB(0,0,0));
+			pDC->SetPixel(x0+x, y0-y, RGB(0,0,0));
+			pDC->SetPixel(x0-x, y0-y, RGB(0,0,0));
+	}
+	f2=(rady*rady*(x+0.5)*(x+0.5))+(radx*radx*(y-1)*(y-1))-(radx*radx*rady*rady);
+	while(x<=radx && y>=0)
+	{
+	
+			if (f2>0)
+			{
+				y--;f2-=(2*radx*radx*y)+(radx*radx);
+			}
+
+			else
+			{
+				x++;y--;f2+=(2*rady*rady*x)-(2*radx*radx*y)+(radx*radx);
+			}
+
+			pDC->SetPixel(x0+x, y0+y, RGB(0,0,0));
+			pDC->SetPixel(x0-x, y0+y, RGB(0,0,0));
+			pDC->SetPixel(x0+x, y0-y, RGB(0,0,0));
+			pDC->SetPixel(x0-x, y0-y, RGB(0,0,0));
+	}
+
+}
+
+
+
+-----------------------------------------------------------TOC------------------------------------------
+	
+	//pda
+#include <stdio.h>
+#include <iostream>
+#include <conio.h>
+#include<string.h>
+using namespace std;
+#define MAX 20
+class Stack
+{
+	public:
+	int top;
+	char a[MAX];
+	Stack()
+	{
+		top = -1;
+	}
+	void push(char x)
+	{
+		a[++top] = x;
+	}
+	void pop()
+	{
+		--top;
+	}
+	char peek()
+	{
+		char x = a[top];
+		return x;
+	}
+	bool isEmpty()
+	{
+		return (top < 0);
+	}
+	void display()
+	{
+		for (int s = top; s >= 0; s--)
+		cout << a[s];
+	}
+};
+void displaytransition(string state, Stack stack, char str[], int t, int l)
+{
+	cout << " " << state << " | ";
+	for (int k = t; k < l; k++)
+	cout << str[k];
+	for (int k = 0; k < (10 - l + t); k++)
+	cout << " ";
+	cout << " | ";
+	stack.display();
+	cout << endl;
+}
+int main()
+{
+	enum state { q0, q1, q2 };
+	int len;
+	state current_state = q0;
+	char str[10];
+	class Stack stack;
+	cout << "Enter the string: ";
+	cin >> str;
+	len = strlen(str);
+	cout << "Using Push Down Automata: " << endl;
+	cout << "State | Input | Stack" << endl;
+	cout << "--------------------------" << endl;
+	displaytransition("q0", stack, str, 0, len);
+	for (int i = 0; i <= len;)
+	{
+		switch (current_state)
+		{
+			case q0:
+			if (i < len)
+			if (str[i] == 'a' && stack.isEmpty())
+			{
+				current_state = q0;
+				stack.push('a');
+				displaytransition("q0", stack, str, i+1, len);
+			}
+			else if (str[i] == 'a' && stack.peek() == 'a')
+			{
+				current_state = q0;
+				stack.push('a');
+				displaytransition("q0", stack, str, i+1, len);
+			}
+			else if (str[i] == 'b' && stack.isEmpty())
+			{
+				current_state = q0;
+				stack.push('b');
+				displaytransition("q0", stack, str, i+1, len);
+			}
+			else if (str[i] == 'b' && stack.peek() == 'a')
+			{
+				current_state = q1;
+				stack.pop();
+				displaytransition("q1", stack, str, i+1, len);
+			}
+			else
+			{
+				cout << "--------------------------" << endl;
+				cout << "String Rejected !!";
+				goto end;
+			}
+		i++;
+		break;
+		case q1:
+		if (i < len && str[i] == 'b' && stack.peek() == 'a')
+		{
+			current_state = q1;
+			stack.pop();
+			displaytransition("q1", stack, str, i+1, len);
+		}
+		else if (i == len && stack.isEmpty())
+		{
+			current_state = q2;
+			displaytransition("q2", stack, str, i, len);
+			cout << "--------------------------" << endl;
+			cout << "String Accepted !!";
+			goto end;
+		}
+		else
+		{
+			cout << "--------------------------" << endl;
+			cout << "String Rejected !!";
+			goto end;
+		}
+		i++;
+		}
+	}
+	end:
+	_getch();
+	return 0;
+}
+--------------------------------------------------------------------------------------------
+
+	//mealy
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main(){
+	string inp;
+	int count = 0;
+	cout<<"Mealy machine for counting substring abba";
+	cout<<"\n\nEnter string: ";
+	cin>>inp;
+	
+	int len = inp.length();
+	cout<<"\nSTATE-A";
+	
+	for(int i=0; i<len; i++){
+		if(inp[i] == 'a'){
+			cout<<"---"<<inp[i]<<"|0---";
+			cout<<"STATE-B";
+			if(inp[i+1] == 'b'){
+				cout<<"---"<<inp[i+1]<<"|0---";
+				cout<<"STATE-C";
+			if(inp[i+2] == 'b'){
+				cout<<"---"<<inp[i+2]<<"|0---";
+				cout<<"STATE-D";
+				if(inp[i+3] == 'a'){
+				cout<<"---"<<inp[i+3]<<"|1---";
+				cout<<"STATE-E";
+				count++;
+				i+=3;
+				
+			}
+			}
+		}
+	}
+	
+	else{
+		cout<<"---"<<inp[i]<<"|0---";
+		cout<<"STATE-A";
+	}
+}
+	if(count >= 1){
+		cout<<"\n\nString is accepted";
+		cout<<"\ncount of abba: "<<count;
+	}
+}
+-----------------------------------------------------------------------------------------
+	//MOOREY
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main(){
+	string inp;
+	int count = 0;
+	cout<<"Moore machine for counting substring abba";
+	cout<<"\n\nEnter string: ";
+	cin>>inp;
+	
+	int len = inp.length();
+	cout<<"\n(STATE-A|0)";
+	
+	for(int i=0; i<len; i++){
+		if(inp[i] == 'a'){
+			cout<<"---"<<inp[i]<<"---";
+			cout<<"(STATE-B|0)";
+			if(inp[i+1] == 'b'){
+				cout<<"---"<<inp[i+1]<<"---";
+				cout<<"(STATE-C|0)";
+			if(inp[i+2] == 'b'){
+				cout<<"---"<<inp[i+2]<<"---";
+				cout<<"(STATE-D|0)";
+				if(inp[i+3] == 'a'){
+				cout<<"---"<<inp[i+3]<<"---";
+				cout<<"(STATE-E|1)";
+				count++;
+				i+=3;
+				
+			}
+			}
+		}
+	}
+	
+	else{
+		cout<<"---"<<inp[i]<<"---";
+		cout<<"STATE-A|0";
+	}
+}
+	if(count >= 1){
+		cout<<"\n\nString is accepted";
+		cout<<"\ncount of abba: "<<count;
+	}
+}
+------------------------------------------------------------------------------------------
+
+	//unit production
+/* This source has been formatted by an unregistered SourceFormatX */
+/* If you want to remove this info, please register this shareware */
+/* Please visit http://www.textrush.com to get more information    */
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+string remove(string s, char c)
+{
+  cout << "Initial string: " << s << endl;
+  s.erase(remove(s.begin(), s.end(), c), s.end());
+  cout << "Final string: " << s << endl;
+  return s;
+}
+
+int main()
+{
+  int i, n, j, pos;
+  char nterminal[100];
+  string production[100], r_output;
+
+  cout << "enter number of statements" << endl;
+  cin >> n;
+  for (i = 0; i < n; i++)
+  {
+    cout << "enter non terminal symbol" << endl;
+    cin >> nterminal[i];
+    cout << "enter production" << endl;
+    cin >> production[i];
+  }
+
+  for (i = 0; i < n; i++)
+  {
+    for (j = 0; j < n; j++)
+    {
+      if (production[i].find(nterminal[j]) !=  - 1)
+      {
+        pos = production[i].find(nterminal[j]);
+
+        if ((production[i][pos - 1] == '/' || pos == 0) && (production[i][pos +
+          1] == '/' || pos == production[i].length() - 1))
+        {
+          production[i] = remove(production[i], nterminal[j]);
+
+          production[i] += "/";
+          production[i] += production[j];
+        }
+      }
+    }
+  }
+
+  cout << "\n\n";
+  for (i = 0; i < n; i++)
+  {
+    cout << nterminal[i] << " -> " << production[i] << endl;
+  }
+//S->ABCD
+//A->aA$
+//B->bB4
+//C->c
+}
+-------------------------------------------------------------------------------------
+	//null-production
+#include <iostream>
+#include <string>
+using namespace std;
+int main()
+{
+	cout << "Turing machine that accepts palindrome\n\tstring should contain a and b only\n\tnull is denoted by 0" << endl;
+    string tape;
+    cout << "Enter the string: ";
+    cin >> tape;
+    tape = "0" + tape + "0";
+    int head = 1;
+    int state = 0;
+    cout << "Tape: " << tape << endl;
+    cout << "state = " << state << " head = " << head << endl;
+    
+    char c;
+    while(true)
+    {
+		c = tape[head];
+		tape[head] = '0';
+		head++;
+		
+		if(tape[head] == '0' )
+		{
+			cout<<"The String is palindrome";
+			break;
+		}
+		
+		while(tape[head]!='0')
+		{
+			head++;
+		}
+		head--;
+		
+		if(c == tape[head])
+		{
+			tape[head] = '0';
+			head--;
+			
+			while(tape[head]!='0')
+			{
+				head--;
+			}
+			head++;			
+		}
+		else
+		{
+			cout<<"The String is not palindrome";
+			break;
+		}
+		}
+	}
+
+------------------------------------------------------------------------------------------------------------
+
+	//re to dfa
+#include<iostream>
+#include<string>
+int dfa = 1, flag = 0;
+using namespace std;
+void state1(char c){
+	if(c =='a'){
+		cout<<"--"<<c<<"--"<<dfa;
+	}
+	
+	else{
+		dfa = 2;
+		cout<<"--"<<c<<"--"<<dfa;
+	}
+}
+
+void state2(char c){
+	if(c =='b'){
+		flag = 1;
+		cout<<"\nFails : "<<c<<" is not allowed to repeat in state "<<dfa;
+	}
+	
+	else{
+		dfa = 3;
+		cout<<"--"<<c<<"--"<<dfa;
+	}
+}
+
+void state3(char c){
+	if(c =='a'){
+		flag = 1;
+		cout<<"\nFails : "<<c<<" is not allowed to repeat in state "<<dfa;
+	}
+	
+	else{
+		dfa = 4;
+		cout<<"--"<<c<<"--"<<dfa;
+	}
+}
+
+int main(){
+	string inp;
+	cout<< "Regular Expression: a*bab(a+b)*\n\n";
+	cout<<"Enter a String: ";
+	cin>> inp;
+	
+	for(int i=0; i<inp.length(); i++){
+		if(dfa==1){
+			state1(inp[i]);
+			if(flag == 1)
+			break;
+		}
+		
+		else if(dfa==2){
+			state2(inp[i]);
+			if(flag == 1)
+			break;
+		}
+		
+		else if(dfa==3){
+			state3(inp[i]);
+			if(flag == 1)
+			break;
+		}
+	}
+	
+	cout<<endl;
+	if(dfa == 4)
+	cout<<"String is Valid";
+	
+	else
+	cout<<"Invalid";
+}
+------------------------------------------------------------------------------
+	
